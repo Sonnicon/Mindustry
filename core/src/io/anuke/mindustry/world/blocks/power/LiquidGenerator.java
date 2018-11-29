@@ -13,7 +13,7 @@ import io.anuke.ucore.util.Mathf;
 
 public abstract class LiquidGenerator extends PowerGenerator{
     protected float minEfficiency = 0.2f;
-    protected float powerPerLiquid;
+    protected float liquidPowerMultiplier;
     /**Maximum liquid used per frame.*/
     protected float maxLiquidGenerate;
     protected Effect generateEffect = BlockFx.generatespark;
@@ -50,13 +50,16 @@ public abstract class LiquidGenerator extends PowerGenerator{
     public void update(Tile tile){
         TileEntity entity = tile.entity();
 
+        // TODO Code duplication with ItemLiquidGenerator
         if(entity.liquids.get(entity.liquids.current()) >= 0.001f){
-            float powerPerLiquid = getEfficiency(entity.liquids.current()) * this.powerPerLiquid;
+            //float powerPerLiquid = getEfficiency(entity.liquids.current()) * this.powerPerLiquid;
             float used = Math.min(entity.liquids.currentAmount(), maxLiquidGenerate * entity.delta());
-            used = Math.min(used, (powerCapacity - entity.power.amount) / powerPerLiquid);
+            // TODO Adapt to new power system
+            //used = Math.min(used, (powerCapacity - entity.power.amount) / powerPerLiquid);
 
             entity.liquids.remove(entity.liquids.current(), used);
-            entity.power.amount += used * powerPerLiquid;
+            // TODO Adapt to new power system
+            //entity.power.amount += used * powerPerLiquid;
 
             if(used > 0.001f && Mathf.chance(0.05 * entity.delta())){
                 Effects.effect(generateEffect, tile.drawx() + Mathf.range(3f), tile.drawy() + Mathf.range(3f));

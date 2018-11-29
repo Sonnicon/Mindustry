@@ -20,9 +20,8 @@ public class LiquidBlocks extends BlockList implements ContentList{
         rotaryPump = new Pump("rotary-pump"){{
             shadow = "shadow-rounded-2";
             pumpAmount = 0.2f;
-            consumes.power(0.015f);
+            consumes.powerDirect(0.015f);
             liquidCapacity = 30f;
-            powerCapacity = 20f;
             hasPower = true;
             size = 2;
             tier = 1;
@@ -31,10 +30,9 @@ public class LiquidBlocks extends BlockList implements ContentList{
         thermalPump = new Pump("thermal-pump"){{
             shadow = "shadow-rounded-2";
             pumpAmount = 0.275f;
-            consumes.power(0.03f);
+            consumes.powerDirect(0.03f);
             liquidCapacity = 40f;
             hasPower = true;
-            powerCapacity = 20f;
             size = 2;
             tier = 2;
         }};
@@ -67,9 +65,9 @@ public class LiquidBlocks extends BlockList implements ContentList{
         }};
 
         phaseConduit = new LiquidBridge("phase-conduit"){{
-            range = 11;
+            range = 12;
             hasPower = true;
-            consumes.power(0.05f);
+            consumes.powerDirect(0.03f);
         }};
     }
 }

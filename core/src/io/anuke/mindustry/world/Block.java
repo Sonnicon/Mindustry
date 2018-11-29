@@ -20,6 +20,7 @@ import io.anuke.mindustry.input.CursorType;
 import io.anuke.mindustry.type.ContentType;
 import io.anuke.mindustry.type.Item;
 import io.anuke.mindustry.type.ItemStack;
+import io.anuke.mindustry.world.consumers.ConsumePower;
 import io.anuke.mindustry.world.meta.*;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
@@ -153,7 +154,7 @@ public class Block extends BaseBlock {
         TileEntity entity = tile.entity();
 
         for(Tile other : getPowerConnections(tile, tempTiles)){
-            if(other.entity.power != null){
+            if(other.entity.power != null && other.entity.power.graph != null){
                 other.entity.power.graph.add(entity.power.graph);
             }
         }
@@ -330,14 +331,14 @@ public class Block extends BaseBlock {
 
         consumes.forEach(cons -> cons.display(stats));
 
-        if(hasPower) stats.add(BlockStat.powerCapacity, powerCapacity, StatUnit.powerUnits);
+        // Note: Power stats are added by the consumers.
         if(hasLiquids) stats.add(BlockStat.liquidCapacity, liquidCapacity, StatUnit.liquidUnits);
         if(hasItems) stats.add(BlockStat.itemCapacity, itemCapacity, StatUnit.items);
     }
 
-    //TODO make this easier to config.
     public void setBars(){
-        if(hasPower) bars.add(new BlockBar(BarType.power, true, tile -> tile.entity.power.amount / powerCapacity));
+        if(consumes.has(ConsumePower.class))
+            bars.add(new BlockBar(BarType.power, true, tile -> tile.entity.power.satisfaction));
         if(hasLiquids)
             bars.add(new BlockBar(BarType.liquid, true, tile -> tile.entity.liquids.total() / liquidCapacity));
         if(hasItems)
@@ -403,8 +404,8 @@ public class Block extends BaseBlock {
             explosiveness += tile.entity.liquids.sum((liquid, amount) -> liquid.flammability * amount / 2f);
         }
 
-        if(hasPower){
-            power += tile.entity.power.amount;
+        if(consumes.has(ConsumePower.class) && consumes.get(ConsumePower.class).isBuffered){
+            power += tile.entity.power.satisfaction * consumes.get(ConsumePower.class).powerCapacity;
         }
 
         tempColor.mul(1f / units);

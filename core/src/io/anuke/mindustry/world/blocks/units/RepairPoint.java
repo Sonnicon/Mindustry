@@ -37,8 +37,8 @@ public class RepairPoint extends Block{
         layer = Layer.turret;
         layer2 = Layer.laser;
         hasPower = true;
-        powerCapacity = 20f;
-        consumes.power(0.06f);
+        // TODO Adapt to new power system - Make it use power while repairing
+        consumes.powerBuffered(20f);
     }
 
     @Override
@@ -89,6 +89,7 @@ public class RepairPoint extends Block{
         }else if(entity.target != null){
             entity.target.health += repairSpeed * Timers.delta() * entity.strength;
             entity.target.clampHealth();
+            // TODO: Make it use power here and reset power once target goes null
             entity.rotation = Mathf.slerpDelta(entity.rotation, entity.angleTo(entity.target), 0.5f);
         }
 

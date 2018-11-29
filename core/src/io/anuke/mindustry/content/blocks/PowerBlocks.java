@@ -4,6 +4,7 @@ import io.anuke.mindustry.content.Liquids;
 import io.anuke.mindustry.content.fx.BlockFx;
 import io.anuke.mindustry.game.ContentList;
 import io.anuke.mindustry.world.Block;
+import io.anuke.mindustry.world.Tile;
 import io.anuke.mindustry.world.blocks.power.*;
 
 public class PowerBlocks extends BlockList implements ContentList{
@@ -13,42 +14,40 @@ public class PowerBlocks extends BlockList implements ContentList{
     @Override
     public void load(){
         combustionGenerator = new BurnerGenerator("combustion-generator"){{
-            powerOutput = 0.09f;
-            powerCapacity = 40f;
+            powerProduction = 0.09f;
             itemDuration = 40f;
         }};
 
         thermalGenerator = new LiquidHeatGenerator("thermal-generator"){{
             maxLiquidGenerate = 4f;
-            powerCapacity = 40f;
-            powerPerLiquid = 0.1f;
+            // TODO: Balance
+            powerProduction = 0.17f;
+            liquidPowerMultiplier = 0.1f;
             generateEffect = BlockFx.redgeneratespark;
             size = 2;
         }};
 
         turbineGenerator = new TurbineGenerator("turbine-generator"){{
-            powerOutput = 0.28f;
-            powerCapacity = 40f;
+            // TODO: Balance
+            powerProduction = 0.28f;
+            liquidPowerMultiplier = 0.3f;
             itemDuration = 30f;
-            powerPerLiquid = 0.7f;
             consumes.liquid(Liquids.water, 0.05f);
             size = 2;
         }};
 
         rtgGenerator = new DecayGenerator("rtg-generator"){{
-            powerCapacity = 40f;
             size = 2;
-            powerOutput = 0.3f;
+            powerProduction = 0.3f;
             itemDuration = 220f;
         }};
 
         solarPanel = new SolarGenerator("solar-panel"){{
-            generation = 0.0045f;
+            powerProduction = 0.0045f;
         }};
 
-        largeSolarPanel = new SolarGenerator("solar-panel-large"){{
-            size = 3;
-            generation = 0.055f;
+        largeSolarPanel = new PowerGenerator("solar-panel-large"){{
+            powerProduction = 0.055f;
         }};
 
         thoriumReactor = new NuclearReactor("thorium-reactor"){{
@@ -63,12 +62,12 @@ public class PowerBlocks extends BlockList implements ContentList{
         }};
 
         battery = new Battery("battery"){{
-            powerCapacity = 320f;
+            consumes.powerBuffered(320f, 120f);
         }};
 
         batteryLarge = new Battery("battery-large"){{
             size = 3;
-            powerCapacity = 2000f;
+            consumes.powerBuffered(2000f, 600f);
         }};
 
         powerNode = new PowerNode("power-node"){{
